@@ -1,0 +1,25 @@
+# Binaries for programs
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go binaries
+/feed
+/main
+
+# Output directory
+/output/
+
+# Dependency directories
+vendor/
+
+# Test results
+test_output/
+
+# IDE and editor files
+.idea/
+.vscode/
+.DS_Store

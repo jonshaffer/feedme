@@ -1,0 +1,28 @@
+# Global output settings
+output_limit: 0 # Set to a positive integer to limit the total number of items in the output. 0 or negative means no limit.
+page_size: 0    # Set to a positive integer to enable pagination. Each page will contain this many items. 0 or 1 means no pagination (single file output).
+generate_individual_item_files: false # Set to true to generate a separate JSON file for each feed item.
+generate_platform_feeds: false      # Set to true to generate separate JSON files for each social media platform.
+
+feeds:
+  linkedin:
+    enabled: true
+  threads:
+    enabled: false
+  x:
+    enabled: true
+  instagram:
+    enabled: false
+  reddit:
+    enabled: true
+  strava:
+    enabled: false
+  goodreads:
+    enabled: false
+  credly:
+    enabled: false
+  rss:
+    enabled: true
+    urls:
+      - "https://www.example.com/my-blog-feed.xml"
+      - "https://www.another-site.com/news.rss"

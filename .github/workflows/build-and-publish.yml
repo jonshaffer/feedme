@@ -1,0 +1,63 @@
+name: Build and Publish Feed
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs daily at midnight UTC by default
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # For pushing to gh-pages branch
+      pages: write    # For GitHub Pages deployment
+      id-token: write # For OIDC authentication
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22' # Or your preferred Go version
+
+      - name: Install dependencies and build
+        run: |
+          go mod tidy
+          go build -o feed-generator .
+
+      - name: Run feed generator
+        run: ./feed-generator
+        env:
+          # Pass GitHub Secrets as environment variables to the Go application
+          LINKEDIN_API_KEY: ${{ secrets.LINKEDIN_API_KEY }}
+          LINKEDIN_API_SECRET: ${{ secrets.LINKEDIN_API_SECRET }}
+          THREADS_API_KEY: ${{ secrets.THREADS_API_KEY }}
+          THREADS_API_SECRET: ${{ secrets.THREADS_API_SECRET }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          INSTAGRAM_API_KEY: ${{ secrets.INSTAGRAM_API_KEY }}
+          INSTAGRAM_API_SECRET: ${{ secrets.INSTAGRAM_API_SECRET }}
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+          REDDIT_USERNAME: ${{ secrets.REDDIT_USERNAME }}
+          REDDIT_PASSWORD: ${{ secrets.REDDIT_PASSWORD }}
+          STRAVA_CLIENT_ID: ${{ secrets.STRAVA_CLIENT_ID }}
+          STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
+          GOODREADS_API_KEY: ${{ secrets.GOODREADS_API_KEY }}
+          GOODREADS_API_SECRET: ${{ secrets.GOODREADS_API_SECRET }}
+          CREDLY_API_KEY: ${{ secrets.CREDLY_API_KEY }}
+          CREDLY_API_SECRET: ${{ secrets.CREDLY_API_SECRET }}
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './output' # Path to the directory containing feed.json
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
